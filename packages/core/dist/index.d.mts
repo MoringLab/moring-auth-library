@@ -46,6 +46,7 @@ declare class MoringAuth {
         scope?: string[];
         codeChallenge?: string;
         codeChallengeMethod?: string;
+        responseMode?: string;
     }): Promise<{
         url: string;
         state: string;

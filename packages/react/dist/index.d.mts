@@ -33,6 +33,19 @@ interface UseMoringAuthResult {
         tokens: TokenResponse;
         user: MoringUser;
     }>;
+    /**
+     * Opens the Moring SSO Login page in a popup window and returns tokens and user object upon successful login without requiring a redirect.
+     */
+    loginWithPopup: (options?: {
+        state?: string;
+        nonce?: string;
+        scope?: string[];
+        popupWidth?: number;
+        popupHeight?: number;
+    }) => Promise<{
+        tokens: TokenResponse;
+        user: MoringUser;
+    }>;
 }
 declare function useMoringAuth(): UseMoringAuthResult;
 

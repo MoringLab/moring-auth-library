@@ -1,7 +1,7 @@
 {
   "name": "@moring-auth/core",
-  "version": "0.1.0",
-  "description": "Core SDK for Moring SSO Integration",
+  "version": "0.2.0",
+  "description": "Core utilities and OIDC client for Moring SSO.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

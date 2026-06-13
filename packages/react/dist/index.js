@@ -76,9 +76,62 @@ function useMoringAuth() {
     }
     return { tokens, user };
   };
+  const loginWithPopup = async (options) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const client = (0, import_core.createMoringAuth)({ issuer, clientId, redirectUri, scope });
+        const { url, state, codeVerifier } = await client.getLoginUrl({
+          ...options,
+          responseMode: "web_message"
+        });
+        const width = options?.popupWidth || 500;
+        const height = options?.popupHeight || 600;
+        const left = window.screen.width / 2 - width / 2;
+        const top = window.screen.height / 2 - height / 2;
+        const popup = window.open(url, "MoringSSOLogin", `width=${width},height=${height},left=${left},top=${top}`);
+        if (!popup) {
+          throw new Error("Popup blocked by browser. Please allow popups for this site.");
+        }
+        const messageListener = async (event) => {
+          const issuerOrigin = new URL(issuer).origin;
+          if (event.origin !== issuerOrigin) return;
+          if (event.data?.type === "authorization_response" && event.data?.response) {
+            window.removeEventListener("message", messageListener);
+            const responseData = event.data.response;
+            if (responseData.error) {
+              reject(new Error(responseData.error_description || responseData.error));
+              return;
+            }
+            if (responseData.state !== state) {
+              reject(new Error("State mismatch in popup response"));
+              return;
+            }
+            try {
+              const tokens = await client.handleCallback(responseData.code, { codeVerifier });
+              const user = await client.verifyToken(tokens.id_token);
+              resolve({ tokens, user });
+            } catch (err) {
+              reject(err);
+            }
+          }
+        };
+        window.addEventListener("message", messageListener);
+        const checkClosed = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkClosed);
+            window.removeEventListener("message", messageListener);
+            reject(new Error("Popup closed by user before completing login"));
+          }
+        }, 1e3);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
   return {
     login,
-    handleCallback
+    handleCallback,
+    loginWithPopup
   };
 }
 // Annotate the CommonJS export names for ESM import in node:

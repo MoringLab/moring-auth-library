@@ -93,6 +93,9 @@ var MoringAuth = class {
     url.searchParams.set("scope", scope.join(" "));
     url.searchParams.set("state", state);
     url.searchParams.set("nonce", nonce);
+    if (options?.responseMode) {
+      url.searchParams.set("response_mode", options.responseMode);
+    }
     let codeVerifier;
     if (options?.codeChallenge) {
       url.searchParams.set("code_challenge", options.codeChallenge);

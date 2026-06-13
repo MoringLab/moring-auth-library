@@ -1,7 +1,7 @@
 {
   "name": "@moring-auth/react",
-  "version": "0.1.0",
-  "description": "React Adapter for Moring SSO Integration",
+  "version": "0.2.0",
+  "description": "React components and hooks for Moring SSO.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

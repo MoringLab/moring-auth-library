@@ -42,6 +42,7 @@ export class MoringAuth {
     scope?: string[];
     codeChallenge?: string;
     codeChallengeMethod?: string;
+    responseMode?: string;
   }): Promise<{
     url: string;
     state: string;
@@ -60,6 +61,9 @@ export class MoringAuth {
     url.searchParams.set('scope', scope.join(' '));
     url.searchParams.set('state', state);
     url.searchParams.set('nonce', nonce);
+    if (options?.responseMode) {
+      url.searchParams.set('response_mode', options.responseMode);
+    }
 
     let codeVerifier: string | undefined;
     if (options?.codeChallenge) {
