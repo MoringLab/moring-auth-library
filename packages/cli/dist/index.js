@@ -118,40 +118,11 @@ MORING_CLIENT_ID="${answers.clientId}"
       const apiDir = import_path.default.join(process.cwd(), isSrc ? "src/app/api/auth/callback" : "app/api/auth/callback");
       import_fs.default.mkdirSync(apiDir, { recursive: true });
       const routeFilePath = import_path.default.join(apiDir, "route.ts");
-      const routeContent = `import { NextResponse } from 'next/server';
-import { createMoringAuth } from '@moring-auth/core';
+      const routeContent = `import { handleAuth } from '@moring-auth/nextjs';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const code = searchParams.get('code');
-
-  if (!code) {
-    return NextResponse.json({ error: 'Authorization code missing' }, { status: 400 });
-  }
-
-  try {
-    const auth = createMoringAuth();
-    const tokens = await auth.handleCallback(code);
-    
-    // User info can be extracted from ID Token
-    const user = await auth.verifyToken(tokens.id_token);
-
-    // Save user session in cookies
-    const response = NextResponse.redirect(new URL('/protected', request.url));
-    
-    response.cookies.set('moring_session', tokens.id_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: tokens.expires_in || 3600,
-    });
-
-    return response;
-  } catch (err: any) {
-    console.error('SSO Authentication failed:', err);
-    return NextResponse.json({ error: 'SSO Authentication failed', details: err.message }, { status: 500 });
-  }
-}
+export const GET = handleAuth({
+  successRedirectUrl: '/protected',
+});
 `;
       import_fs.default.writeFileSync(routeFilePath, routeContent);
       console.log(import_picocolors.default.green(`\u2714 Created callback API Route at: ${import_path.default.relative(process.cwd(), routeFilePath)}`));

@@ -109,40 +109,11 @@ program
         fs.mkdirSync(apiDir, { recursive: true });
 
         const routeFilePath = path.join(apiDir, 'route.ts');
-        const routeContent = `import { NextResponse } from 'next/server';
-import { createMoringAuth } from '@moring-auth/core';
+        const routeContent = `import { handleAuth } from '@moring-auth/nextjs';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const code = searchParams.get('code');
-
-  if (!code) {
-    return NextResponse.json({ error: 'Authorization code missing' }, { status: 400 });
-  }
-
-  try {
-    const auth = createMoringAuth();
-    const tokens = await auth.handleCallback(code);
-    
-    // User info can be extracted from ID Token
-    const user = await auth.verifyToken(tokens.id_token);
-
-    // Save user session in cookies
-    const response = NextResponse.redirect(new URL('/protected', request.url));
-    
-    response.cookies.set('moring_session', tokens.id_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: tokens.expires_in || 3600,
-    });
-
-    return response;
-  } catch (err: any) {
-    console.error('SSO Authentication failed:', err);
-    return NextResponse.json({ error: 'SSO Authentication failed', details: err.message }, { status: 500 });
-  }
-}
+export const GET = handleAuth({
+  successRedirectUrl: '/protected',
+});
 `;
         fs.writeFileSync(routeFilePath, routeContent);
         console.log(pc.green(`✔ Created callback API Route at: ${path.relative(process.cwd(), routeFilePath)}`));
