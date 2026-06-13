@@ -1,0 +1,41 @@
+{
+  "name": "@moring-auth/nextjs",
+  "version": "0.1.0",
+  "description": "Next.js Adapter for Moring SSO Integration",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./middleware": {
+      "require": "./dist/middleware.js",
+      "import": "./dist/middleware.mjs",
+      "types": "./dist/middleware.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/middleware.ts --format cjs,esm --dts --clean --external next",
+    "dev": "tsup src/index.ts src/middleware.ts --format cjs,esm --dts --watch --external next"
+  },
+  "dependencies": {
+    "@moring-auth/core": "^0.1.0"
+  },
+  "peerDependencies": {
+    "next": "^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "devDependencies": {
+    "next": "16.0.10",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}

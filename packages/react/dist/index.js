@@ -1,0 +1,89 @@
+"use strict";
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/index.ts
+var index_exports = {};
+__export(index_exports, {
+  MoringAuthContext: () => MoringAuthContext,
+  MoringAuthProvider: () => MoringAuthProvider,
+  useMoringAuth: () => useMoringAuth
+});
+module.exports = __toCommonJS(index_exports);
+
+// src/provider.tsx
+var import_react = require("react");
+var import_jsx_runtime = require("react/jsx-runtime");
+var MoringAuthContext = (0, import_react.createContext)(null);
+var MoringAuthProvider = ({
+  issuer,
+  clientId,
+  redirectUri,
+  scope,
+  children
+}) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MoringAuthContext.Provider, { value: { issuer, clientId, redirectUri, scope }, children });
+};
+
+// src/hooks.ts
+var import_react2 = require("react");
+var import_core = require("@moring-auth/core");
+function useMoringAuth() {
+  const context = (0, import_react2.useContext)(MoringAuthContext);
+  if (!context) {
+    throw new Error("useMoringAuth must be used within a MoringAuthProvider");
+  }
+  const { issuer, clientId, redirectUri, scope } = context;
+  const login = async (options) => {
+    const client = (0, import_core.createMoringAuth)({ issuer, clientId, redirectUri, scope });
+    const { url, state, nonce, codeVerifier } = await client.getLoginUrl(options);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("moring_auth_state", state);
+      window.sessionStorage.setItem("moring_auth_nonce", nonce);
+      if (codeVerifier) {
+        window.sessionStorage.setItem("moring_auth_code_verifier", codeVerifier);
+      }
+      window.location.href = url;
+    }
+  };
+  const handleCallback = async (code) => {
+    const client = (0, import_core.createMoringAuth)({ issuer, clientId, redirectUri, scope });
+    let codeVerifier;
+    if (typeof window !== "undefined") {
+      codeVerifier = window.sessionStorage.getItem("moring_auth_code_verifier") || void 0;
+    }
+    const tokens = await client.handleCallback(code, { codeVerifier });
+    const user = await client.verifyToken(tokens.id_token);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.removeItem("moring_auth_state");
+      window.sessionStorage.removeItem("moring_auth_nonce");
+      window.sessionStorage.removeItem("moring_auth_code_verifier");
+    }
+    return { tokens, user };
+  };
+  return {
+    login,
+    handleCallback
+  };
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  MoringAuthContext,
+  MoringAuthProvider,
+  useMoringAuth
+});

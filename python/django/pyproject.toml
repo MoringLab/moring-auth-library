@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moring-auth-django"
+version = "0.1.0"
+description = "Django adapter for Moring SSO integration"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+dependencies = [
+    "django>=3.2",
+    "moring-auth>=0.1.0"
+]

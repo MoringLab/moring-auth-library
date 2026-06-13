@@ -1,0 +1,37 @@
+{
+  "name": "@moring-auth/express",
+  "version": "0.1.0",
+  "description": "Express Adapter for Moring SSO Integration",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external express",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch --external express"
+  },
+  "dependencies": {
+    "@moring-auth/core": "^0.1.0"
+  },
+  "peerDependencies": {
+    "express": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.19.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}

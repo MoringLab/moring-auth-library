@@ -1,0 +1,35 @@
+{
+  "node": {
+    "00a42a88ce4b115099bacad94c79e8dbb44debf60c": {
+      "workers": {
+        "app/page": {
+          "moduleId": 6133,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "examples/nextjs-starter/src/app/page.tsx"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "examples/nextjs-starter/src/app/page.tsx"
+    },
+    "00e8494ea6270542e19acf557821a45807e858fe8c": {
+      "workers": {
+        "app/page": {
+          "moduleId": 6133,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_1",
+          "filename": "examples/nextjs-starter/src/app/page.tsx"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_1",
+      "filename": "examples/nextjs-starter/src/app/page.tsx"
+    }
+  },
+  "edge": {}
+}

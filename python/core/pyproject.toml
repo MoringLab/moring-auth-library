@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moring-auth"
+version = "0.1.0"
+description = "Core Python SDK for Moring SSO integration"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+dependencies = [
+    "pyjwt[crypto]>=2.8.0",
+    "httpx>=0.24.0"
+]
